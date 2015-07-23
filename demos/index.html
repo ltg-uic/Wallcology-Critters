@@ -1,0 +1,295 @@
+<html>
+    <head>
+        <title>Title</title>
+        <style>
+            body { margin: 0; }
+            canvas { width: 100%; height: 100% }
+        </style>
+    </head>
+    <body>
+        <script src="lib/three.min.js"></script>
+        <script src="lib/three.min.js" type="text/javascript"></script>
+        <script src="lib/OBJLoader.js" type="text/javascript"></script>
+        <script src="lib/loaders/DDSLoader.js" type="text/javascript"></script>
+        <script src="lib/loaders/MTLLoader.js" type="text/javascript"></script>
+        <script src="lib/loaders/OBJMTLLoader.js" type="text/javascript"></script>
+        <script src="lib/TrackballControls.js" type="text/javascript"></script>
+        <script>
+            /*******************************************************************/
+            /*                 Declare Global Vars and objects                 */
+            var scene, renderer
+            var camera, controls
+            var geometry, material, cube
+            var mouse = new THREE.Vector2();
+            var CritterGroups;
+
+            var texture = new THREE.Texture();
+            /*=================================================================*/
+            /*                       Start Applcication                        */
+
+            Start();
+            /*=================================================================*/
+            /*                   Begin Function Definitions                    */
+
+            function Start() {
+                onCreate();
+                onFrame();
+            };
+
+            function onCreate() {
+
+                scene = new THREE.Scene();
+                CritterGroups = new THREE.Object3D();
+                scene.add(CritterGroups);
+
+                renderer = new THREE.WebGLRenderer();
+                renderer.setSize( window.innerWidth, window.innerHeight );
+                // renderer.setClearColor(123,123,123, 1);
+                document.body.appendChild( renderer.domElement );
+                initCamera();
+                initListeners();
+                // camera.position.z = 10;
+                // camera.rotation.x = 20;
+
+                initEnvMap();
+                initOBJMTLCritter();
+            }
+
+
+            function initCamera() {
+                console.log("initCamera()");
+                camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
+                {
+                    // **** position the camera near the first halo; ***
+                    // var pos = sphereGroup.children[0].position;
+                    // var pos = curTarget.object.position;
+                    // console.log("\t", pos)
+                        // var pos = pointCloud.position;
+                    // light.position.set(pos.x, pos.y + 0.1, pos.z - (pos.z * 0.5));
+                    camera.position.set(0, -5, 5);
+                    controls = new THREE.TrackballControls(camera, renderer.domElement); {
+                        controls.rotateSpeed = 4.0;
+                        controls.zoomSpeed = 1.5;
+                        controls.panSpeed = 1.0;
+
+                        controls.noZoom = false;
+                        controls.noPan = false;
+
+                        controls.staticMoving = false;
+                        controls.dynamicDampingFactor = 0.3;
+
+                        controls.keys = [65, 83, 68];
+                        controls.enabled = true;
+                    }
+                    camera.lookAt(CritterGroups.position);
+                    controls.target.set(0, -5, -5);
+                    controls.update();
+                    // updateLightPosition();
+                }
+
+            }
+// Textures
+            function initEnvMap() {
+
+                var urls = [ "WallPanel_00.png", "WallPanel_00.png",
+                             "WallPanel_01.png", "WallPanel_01.png",
+                             "WallPanel_02.png", "WallPanel_02.png" ];
+
+                textureCube = THREE.ImageUtils.loadTextureCube( urls );
+                textureCube.format = THREE.RGBFormat;
+
+                // Materials
+
+                var cubeShader = THREE.ShaderLib[ "cube" ];
+                var cubeMaterial = new THREE.ShaderMaterial( {
+                    fragmentShader: cubeShader.fragmentShader,
+                    vertexShader: cubeShader.vertexShader,
+                    uniforms: cubeShader.uniforms,
+                    depthWrite: false,
+                    side: THREE.BackSide
+                } );
+
+                cubeMaterial.uniforms[ "tCube" ].value = textureCube;
+
+                // Skybox
+
+                cubeMesh = new THREE.Mesh( new THREE.BoxGeometry( 10, 10, 10 ), cubeMaterial );
+                scene.add( cubeMesh );
+            }
+
+
+            function initTexture() {
+                // texture
+
+                var manager = new THREE.LoadingManager();
+                manager.onProgress = function ( item, loaded, total ) {
+
+                    console.log( item, loaded, total );
+
+                };
+
+                var onProgress = function ( xhr ) {
+                    if ( xhr.lengthComputable ) {
+                        var percentComplete = xhr.loaded / xhr.total * 100;
+                        console.log( Math.round(percentComplete, 2) + '% downloaded' );
+                    }
+                };
+
+                var onError = function ( xhr ) {
+                };
+
+                var textureLoader = new THREE.ImageLoader( manager );
+                textureLoader.load( 'disturb.jpg', function ( image ) {
+
+                    texture.image = image;
+                    texture.needsUpdate = true;
+
+                } );
+
+                return texture;
+            }
+
+            function initJSONCritter() {
+                var loader = new THREE.ObjectLoader();    //OBJMTLLoader();
+                loader.load('dinoani.js', function (object) {
+                    console.log("Json Critter",object)
+                    var mesh = object.children[0]
+                    console.log("Json Critter__",mesh);
+                    mesh.material.color.setRGB(1,1,1);
+                    // CritterGroups.add(mesh);
+                    // var mesh, material;
+
+                    // // create a mesh
+                    // mesh = new THREE.SkinnedMesh(
+                    //     geometry,
+                    //     new THREE.MeshFaceMaterial(materials)
+                    // );
+                });
+
+            }
+
+            function initOBJMTLCritter() {
+                var loader = new THREE.OBJMTLLoader();
+                loader.load(
+                    // OBJ resource URL
+                    'Dino.obj',
+                    // MTL resource URL
+                    'Dino.mtl',
+                    // Function when both resources are loaded
+                    function ( critter ) {
+                        console.log(critter);
+                        critter.children.forEach(function(mesh) {
+                            console.log("\t",mesh);
+                            mesh.material = new THREE.MeshBasicMaterial({
+                                map: initTexture(),
+                                color: 'rgb(0, 255, 0)',
+                                // blending: THREE.AdditiveBlending,
+                                // specular: colorKey(halo.time),
+                                // shininess: 40,
+                                // shading: THREE.SmoothShading,
+                                // vertexColors: THREE.VertexColors,
+                                // transparent: true,
+                                // side: THREE.BackSide,  // Seems to be slowing things down a lot
+                                opacity: 0.1
+                            });
+
+                        });
+                        critter.scale.set(0.1,0.1,0.1);
+                        critter.position.set(0,-5, -5);
+                        critter.updateMatrix();
+                        CritterGroups.add(critter);
+                        // CritterGroups.getObjectByName(bug.name).add(object);
+                    },
+                    // Function called when downloads progress
+                    function ( xhr ) {
+                        // console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
+                    },
+                    // Function called when downloads error
+                    function ( xhr ) {
+                        console.log( 'An error happened' );
+                    }
+                );
+            }
+
+            function onReshape() {
+
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize( window.innerWidth, window.innerHeight );
+
+            }
+
+
+            function onMouseMove( event ) {
+
+                // calculate mouse position in normalized device coordinates
+                // (-1 to +1) for both components
+                event.preventDefault();
+                mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+                mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+
+            }
+
+            function onKeyPress( event ) {
+
+                console.log("Key is",event.keyCode);
+                switch (event.keyCode) {
+
+                    case 49:
+                        camera.position.set(camera.position.x, camera.position.y, camera.position.z-0.3);
+                        // controls.update();
+                        // updateLightPosition();
+                        console.log(camera.position)
+                        break;
+                    case 50:
+                        camera.position.set(camera.position.x, camera.position.y, camera.position.z+0.3);
+                        // controls.update();
+                        // updateLightPosition();
+                        console.log(camera.position);
+                        break;
+                    case 51:
+                        camera.position.set(camera.position.x, camera.position.y+0.3, camera.position.z);
+                        // controls.update();
+                        // updateLightPosition();
+                        console.log(camera.position);
+                        break;
+                    case 52:
+                        camera.position.set(camera.position.x, camera.position.y-0.3, camera.position.z);
+                        // controls.update();
+                        // updateLightPosition();
+                        console.log(camera.position);
+                        break;
+
+                }
+
+            }
+
+
+
+            function initListeners() {
+                console.log("initListeners()")
+                window.addEventListener('resize', onReshape, false);
+                window.addEventListener('mousemove', onMouseMove, false);
+                // window.addEventListener('click', onMouseClick, true);
+                // window.addEventListener('dblclick', onMouseDoubleClick, true);
+                window.addEventListener('keypress', onKeyPress, false);
+            }
+
+            function onFrame() {
+                requestAnimationFrame( onFrame );
+                render();
+            }
+
+            function render() {
+                controls.update();
+                CritterGroups.children.forEach(function(mesh){
+
+                    mesh.rotation.y += 0.1;
+                })
+                renderer.render(scene, camera);
+            };
+
+
+        </script>
+    </body>
+</html>
