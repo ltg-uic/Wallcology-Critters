@@ -1,0 +1,96 @@
+world can manipulate temperature >> 3 different worlds
+    low, medium, high
+
+    Pipes in walls, wall space, wall surface, etc
+        two grubby surfaces/ food patches
+
+    3 configurations ?
+        1) Mostly pipe
+        2) 1/2 Pipe, 1/2 Wall
+        3) Lots of Wall, less Pipe
+
+
+4 Distincitive biomes
+    each under some kind of pressure
+    -All are going to be effected by change overtime
+        climate change, impact of warming climate
+    -Changes of habitat
+        which occur overtime.
+
+Amount of pipes and walls need to be distinct
+
+Structure of things
+    Selecting from 27 different enviornments...(this is the background env)
+    Choose between low/med/high temperature
+    Choose between low/med/high pipes
+    Choose between low/med/high walls
+
+18 total possible flora resources
+    low/med/hi temp specialist
+    low/med/hi pipe specialist
+    low/med/hi wall specialist
+
+    low/med/hi temp generalist
+    low/med/hi pipe generalist
+    low/med/hi wall generalist
+
+18 total Herbivore resources
+
+9 Predator species
+    low/med/hi temp specialist
+    low/med/hi pipe specialist
+    low/med/hi wall specialist
+
+    low/med/hi temp generalist
+    low/med/hi pipe generalist
+    low/med/hi wall generalist
+
+
+
+
+
+Will NOT be visualizing temperature...(maybe do some kind of visual distortion to show heat, or add smoke to show cold air)
+
+
+    Starting background has 27 possible choices
+
+
+=======================================
+F: Flora
+H: Herbavore
+R: Predator
+
+L: Low
+M: Medium
+H: High
+
+P: Pipes
+W: Walls
+T: Temperature
+
+G: Generalist
+S: Specialist
+
+
+
+         F
+     L   |  M   |  H
+   S   G |S   G |S   G
+P
+W
+T
+
+
+         H
+     L   |  M   |  H
+   S   G |S   G |S   G
+P
+W
+T
+
+         R
+     L   |  M   |  H
+   S   G |S   G |S   G
+P
+W
+T

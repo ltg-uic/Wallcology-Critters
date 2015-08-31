@@ -24,6 +24,10 @@
             var CritterGroups;
 
             var texture = new THREE.Texture();
+
+            var GroundCritters, RoofCritters,
+            WestWallCritters, EastWallCritters,
+            NorthWallCritters
             /*=================================================================*/
             /*                       Start Applcication                        */
 
@@ -40,20 +44,18 @@
 
                 scene = new THREE.Scene();
                 CritterGroups = new THREE.Object3D();
+
                 scene.add(CritterGroups);
 
                 renderer = new THREE.WebGLRenderer();
                 renderer.setSize( window.innerWidth, window.innerHeight );
-                // renderer.setClearColor(123,123,123, 1);
                 document.body.appendChild( renderer.domElement );
                 initCamera();
                 initListeners();
-                // camera.position.z = 10;
-                // camera.rotation.x = 20;
 
                 initEnvMap();
-                initOBJMTLCritter();
-                initJSONCritter();
+                initOBJMTLCritter("dino_3");
+                // initJSONCritter();
             }
 
 
@@ -119,8 +121,9 @@
             }
 
 
-            function initTexture() {
+            function initTexture(URL) {
                 // texture
+                console.log(URL)
 
                 var manager = new THREE.LoadingManager();
                 manager.onProgress = function ( item, loaded, total ) {
@@ -140,7 +143,7 @@
                 };
 
                 var textureLoader = new THREE.ImageLoader( manager );
-                textureLoader.load( 'assets/disturb.jpg', function ( image ) {
+                textureLoader.load( URL, function ( image ) {
 
                     texture.image = image;
                     texture.needsUpdate = true;
@@ -152,15 +155,19 @@
 
             function initJSONCritter() {
                 var loader = new THREE.JSONLoader();    //OBJMTLLoader();
-                loader.load('assets/elk_life.js', function (geometry, material) {
-                    console.log("Json Critter",geometry, material)
-                    // CritterGroups.add(mesh);
-                    // var mesh, material;
+                loader.load('assets/elk_life.js', function (geometry, materials) {
+                    console.log("Json Critter",geometry, materials)
+                    materials.forEach(function(mat){
+                        console.log(mat)
+                        // mat.map = initTexture('assets/disturb.jpg')
+                        // mat.emissive.setRGB(Math.random(),Math.random(),Math.random())
+                        // mat.skinning = true;
+                    })
 
                     // create a mesh
                     mesh = new THREE.SkinnedMesh(
                         geometry,
-                        new THREE.MeshFaceMaterial(material)
+                        new THREE.MeshFaceMaterial(materials)
                     );
                     mesh.scale.set(0.02,0.02,0.02)
                     mesh.position.set(0, -5,0);
@@ -169,21 +176,28 @@
 
             }
 
-            function initOBJMTLCritter() {
+
+
+            function initOBJMTLCritter(fname) {
+
+                function getRandPos(min, max) {
+                   return Math.random() * (max - min) + min;
+                }
+
                 var loader = new THREE.OBJMTLLoader();
                 loader.load(
                     // OBJ resource URL
-                    'Dino_1.obj',
+                    fname+'.obj',
                     // MTL resource URL
-                    'Dino_1.mtl',
+                    fname+'.mtl',
                     // Function when both resources are loaded
                     function ( critter ) {
                         console.log(critter);
                         critter.children.forEach(function(mesh) {
                             console.log("\t",mesh);
                             mesh.material = new THREE.MeshBasicMaterial({
-                                map: initTexture(),
-                                color: 'rgb(0, 255, 0)',
+                                map: initTexture("dino_texture.png"),
+                                // color: 'rgb(255, 255, 0)',
                                 // blending: THREE.AdditiveBlending,
                                 // specular: colorKey(halo.time),
                                 // shininess: 40,
@@ -196,7 +210,11 @@
 
                         });
                         critter.scale.set(0.1,0.1,0.1);
-                        critter.position.set(0,-5, -5);
+                        Math.random()*5 - Math.random()*10
+                        critter.position.set(
+                            getRandPos(-5,6),
+                            -5,
+                            getRandPos(-2,3));
                         critter.updateMatrix();
                         CritterGroups.add(critter);
                         // CritterGroups.getObjectByName(bug.name).add(object);
@@ -235,7 +253,9 @@
 
                 console.log("Key is",event.keyCode);
                 switch (event.keyCode) {
-
+                    case 48:
+                        initOBJMTLCritter('dino_3');
+                        break;
                     case 49:
                         camera.position.set(camera.position.x, camera.position.y, camera.position.z-0.3);
                         // controls.update();
@@ -283,10 +303,10 @@
 
             function render() {
                 controls.update();
-                // CritterGroups.children.forEach(function(mesh){
+                CritterGroups.children.forEach(function(mesh){
 
-                //     mesh.rotation.y += 0.1;
-                // })
+                    mesh.rotation.y += 0.1;
+                })
                 renderer.render(scene, camera);
             };
 

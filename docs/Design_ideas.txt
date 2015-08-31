@@ -1,0 +1,81 @@
+Use a system based on Time, having a Time-Until-Penalty period.
+    Use the THREE.Clock() object that checks the current machine time.
+
+
+    Fitness/TimeToPenalty: A Constant Value that determines the Base "Fitness"
+                           of a Critter. This value represents a pool of time
+                           until the Critter takes a penalty to its Vigilance
+                           Score. Fitness may also determine the critters movement
+                           speed, and other factors.
+    Vigilance: A value which determines the rate or threshold of detection for
+               predators and food finding abilities.
+
+    EnviornmentalModifier: A dynamic value that adds to or removes from the Fitness Value
+    HungryModifier: A dynamic value that +/- from the Fitness Value depending on the Critters current state of hunger
+
+    FlightModifier: Flight modifier is a bonus to movement when a predator is detected
+
+    Fitness can never be lower than Zero, however having a low or No Fitness score means the Critter suffers a penalty to
+    its Vigilance score.
+
+
+
+
+    Create a Logging system which logs the following information:
+        The moment when a Critter is Born.
+        The time it takes a meal
+        The duration of time between meals
+        Everytime its Vigilance or Fitness is modified
+        Everytime it detects a predator
+
+
+
+
+Should break up the scene into quadrants or sectors?
+
+if a predator, when checking for food, broadcast a message that checks to see who
+is in its range, then,
+
+
+
+Have a movement counter and flag.
+    Set a period of time when the critter moves, basically tweening position.
+    Then make it stop, look, 'listen'. "Listening" will be a check for when the
+    critter is listening to a food object broadcasting its position. Think like
+    a wolf smelling for prey, or a monkey listening for grub, etc.
+
+    The broadcasting agent has a range/threshold/vigilance(?) score which determines
+    how far it can send its message.
+
+
+
+Broadcasting:
+    Everything has a broadcasting period. Broadcasting is a message system which
+    determines if Thing(s)B are within range of ThingA. Not all broadcasts are the
+    same, certain critters dont care about plant broadcasts, but the plant eating
+    critters would.
+
+    Do either an intersection test around some domain, or more simply check the distance bewteen objects.
+        Critter will select the *closest* target, instead of the first
+        It will have to rotate in the direction of the target. May have to look into a path finding algorithm....
+
+    If a predator is hunting prey, there needs to be a check between the hunter and prey when they are within a given
+        distance from one another...striking distance. This check determines if the prey survives the encounter. If it
+        succeeds,
+
+
+
+If/When a target is spotted,
+
+
+
+
+
+
+Critter {
+    Vigilence:-int
+    Fitness:-int
+    Location:-Object3D-ID
+}
+
+

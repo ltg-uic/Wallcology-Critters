@@ -5,7 +5,7 @@
 		[
 			[
 				"init",
-				"initCritter"
+				"initJSONCritter"
 			],
 			[
 				"Point",
@@ -407,8 +407,17 @@
 			"file": "demos/index.html",
 			"settings":
 			{
-				"buffer_size": 7244,
+				"buffer_size": 11941,
 				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": "Use a system based on Time, having a Time-Until-Penalty period.\n    Use the THREE.Clock() object that checks the current machine time. \n\n\n    Fitness/TimeToPenalty: A Constant Value that determines the Base \"Fitness\" \n                           of a Critter. This value represents a pool of time \n                           until the Critter takes a penalty to its Vigilance \n                           Score. Fitness may also determine the critters movement\n                           speed, and other factors. \n    Vigilance: A value which determines the rate or threshold of detection for\n               predators and food finding abilities. \n\n    EnviornmentalModifier: A dynamic value that adds to or removes from the Fitness Value\n    HungryModifier: A dynamic value that +/- from the Fitness Value depending on the Critters current state of hunger\n\n    FlightModifier: Flight modifier is a bonus to movement when a predator is detected\n\n    Fitness can never be lower than Zero, however having a low or No Fitness score means the Critter suffers a penalty to\n    its Vigilance score. \n\n\n\n\n    Create a Logging system which logs the following information:\n        The moment when a Critter is Born.\n        The time it takes a meal\n        The duration of time between meals\n        Everytime its Vigilance or Fitness is modified\n        Everytime it detects a predator\n\n\n\n\nShould break up the scene into quadrants or sectors?\n\nif a predator, when checking for food, broadcast a message that checks to see who\nis in its range, then, \n\n\n\nHave a movement counter and flag. \n    Set a period of time when the critter moves, basically tweening position. \n    Then make it stop, look, 'listen'. \"Listening\" will be a check for when the \n    critter is listening to a food object broadcasting its position. Think like \n    a wolf smelling for prey, or a monkey listening for grub, etc. \n\n    The broadcasting agent has a range/threshold/vigilance(?) score which determines\n    how far it can send its message. \n\n\n\nBroadcasting:\n    Everything has a broadcasting period. Broadcasting is a message system which \n    determines if Thing(s)B are within range of ThingA. Not all broadcasts are the\n    same, certain critters dont care about plant broadcasts, but the plant eating \n    critters do. ",
+			"settings":
+			{
+				"buffer_size": 2293,
+				"line_ending": "Unix",
+				"name": "Use a system based on Time, having a Time-Until-Pe"
 			}
 		},
 		{
@@ -828,14 +837,10 @@
 		"side_bar_visible": false,
 		"status_bar_visible": false
 	},
-	"expanded_folders":
-	[
-		"/Users/krbalmryde/Dropbox/Code-Projects/LTG/Wallcology/wallcology/interfaces/wallscope-interface",
-		"/Users/krbalmryde/Dropbox/Code-Projects/LTG/Wallcology/Wallcology-Critters",
-		"/Users/krbalmryde/Dropbox/Code-Projects/LTG/Wallcology/Wallcology-Critters/demos"
-	],
 	"file_history":
 	[
+		"/Users/krbalmryde/Dropbox/Code-Projects/LTG/Wallcology/Wallcology-Critters/demos/Dino_1.mtl",
+		"/Users/krbalmryde/Dropbox/Code-Projects/LTG/Wallcology/Wallcology-Critters/demos/assets/Dino_1.mtl",
 		"/Users/krbalmryde/.bash_aliases",
 		"/Users/krbalmryde/.bash_functions",
 		"/Users/krbalmryde/Dropbox/Code-Projects/LTG/Wallcology/Wallcology-Critters/demos/load_test1.html",
@@ -961,9 +966,7 @@
 		"/Users/krbalmryde/Dropbox/Code-Projects/EVL/DarkSkyVis/DarkSkyPy/Halo_257.0_t15.json",
 		"/Users/krbalmryde/Dropbox/Code-Projects/EVL/DarkSkyVis/DarkSkyPy/Halo_257.0_t16.json",
 		"/Users/krbalmryde/Dropbox/Code-Projects/EVL/DarkSkyVis/DarkSkyPy/Halo_257.0_t17.json",
-		"/Users/krbalmryde/Dropbox/Code-Projects/EVL/DarkSkyVis/DarkSkyPy/Halo_257.0_t18.json",
-		"/Users/krbalmryde/Dropbox/Code-Projects/EVL/DarkSkyVis/DarkSkyPy/Halo_257.0_t19.json",
-		"/Users/krbalmryde/Dropbox/Code-Projects/EVL/DarkSkyVis/DarkSkyPy/Halo_257.0_t20.json"
+		"/Users/krbalmryde/Dropbox/Code-Projects/EVL/DarkSkyVis/DarkSkyPy/Halo_257.0_t18.json"
 	],
 	"find":
 	{
@@ -987,6 +990,17 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			"Vigilence",
+			"url",
+			"Dino_1",
+			"psd",
+			"0.2",
+			"assets/",
+			"Dino_TallyShapeBump.psd",
+			"assets/",
+			"png",
+			"controls",
+			"// console.log(camera, light)",
 			"jpg",
 			"r + ",
 			"initJSONCritter",
@@ -1103,18 +1117,7 @@
 			"displayHalos();",
 			"toHead",
 			"HaloSpheres[id]",
-			"__",
-			"initHaloTree",
-			"showSpinner",
-			"\\sLines",
-			"Lines",
-			"lines",
-			"Lines",
-			"handleColorChange",
-			".json",
-			"\"scale\": \"0.12\"",
-			"\"scale\"",
-			"httpfile"
+			"__"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -1187,15 +1190,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 7244,
+						"buffer_size": 11941,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2110,
-								2110
+								1128,
+								1128
 							]
 						],
 						"settings":
@@ -1205,7 +1208,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 376.0,
+						"translation.y": 184.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
@@ -1213,6 +1216,37 @@
 				},
 				{
 					"buffer": 1,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2293,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1541,
+								1541
+							]
+						],
+						"settings":
+						{
+							"auto_name": "Use a system based on Time, having a Time-Until-Pe",
+							"spell_check": true,
+							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 339.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
 					"semi_transient": false,
 					"settings":
 					{
@@ -1230,13 +1264,15 @@
 						"settings":
 						{
 							"auto_name": "<html>",
-							"syntax": "Packages/Text/Plain text.tmLanguage"
+							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
 						"translation.y": 35.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 2,
 					"type": "text"
 				}
 			]
@@ -1817,7 +1853,7 @@
 		[
 			[
 				"",
-				"~/Dropbox/Code-Projects/EVL/LTG/ltg.sublime-workspace"
+				"~/Dropbox/Code-Projects/LTG/Wallcology/Wallcology.sublime-project"
 			]
 		],
 		"width": 380.0
