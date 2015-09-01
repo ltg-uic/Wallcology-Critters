@@ -117,33 +117,54 @@ function initTextureLoader() {
     }
 }
 
-function initJSONLoader() {
+function initJSONLoader(isMorph) {
     var loader = new THREE.JSONLoader();    //OBJMTLLoader();
+    var animation;
     // 'js/assets/3rd/elk_life.js'
-    return function( URL, textURL ) {
-        loader.load(URL, function (geometry, materials) {
-
-            console.log("Json Critter", URL, textURL, geometry, materials)
-            materials.forEach(function(mat){
-                console.log(mat)
-                mat.map = textLoader(textURL)
-                mat.skinning = true;
-                mat.emissive.setRGB(Math.random(),Math.random(),Math.random())
-                // mat.skinning = true;
-            })
-            mesh = new THREE.SkinnedMesh( geometry, new THREE.MeshFaceMaterial(materials) );
-            mesh.scale.set( 1.5, 1.5, 1.5 );
-            mesh.position.set(
-                getRandPos(-5,6),
-                -5,
-                getRandPos(-2,3)
-            );
-            scene.add( mesh );
-            animation = new THREE.Animation( mesh, mesh.geometry.animations[ 0 ], THREE.AnimationHandler.CATMULLROM);
-            console.log(animation)
-            animation.play();
-        });
-    }
+    console.log("isMorph?", isMorph);
+    var name;
+    if (!isMorph)
+        return function( URL, textURL ) {
+            name = URL.split("\\")
+            name = name[name.length-1];
+            loader.load(URL, function (geometry, materials) {
+                console.log("Animation Critter", URL, geometry, materials);
+                materials.forEach(function(mat){
+                    console.log("\t",mat);
+                    mat.map = textLoader(textURL)
+                    mat.skinning = true;
+                    mat.emissive.setRGB(Math.random(),Math.random(),Math.random())
+                })
+                mesh = new THREE.SkinnedMesh( geometry, new THREE.MeshFaceMaterial(materials) );
+                mesh.scale.set( 0.5, 0.5, 0.5 );
+                mesh.position.set(
+                    getRandPos(-5,6),
+                    -5,
+                    getRandPos(-2,3)
+                );
+                CritterGroups.add( mesh );
+                console.log(mesh)
+                var animation = new THREE.Animation( mesh, mesh.geometry.animations[ 0 ], THREE.AnimationHandler.CATMULLROM);
+                animation.play();
+            });
+        }
+    else
+        return function( URL, textURL) {
+            loader.load(URL, function( geometry ) {
+                console.log("Morph Critter", URL, geometry);
+                mesh = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: 0x606060, morphTargets: true } ) );
+                mesh.scale.set( 0.01, 0.01, 0.01 );
+                mesh.position.set(
+                    getRandPos(-5,6),
+                    -5,
+                    getRandPos(-2,3)
+                );
+                CritterGroups.add( mesh );
+                morphAnimations.push(new THREE.MorphAnimation( mesh ));
+                morphAnimations[morphAnimations.length -1].play();
+                // anime.play();
+            });
+        };
 }
 
 

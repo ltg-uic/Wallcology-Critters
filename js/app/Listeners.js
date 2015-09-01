@@ -24,11 +24,11 @@ function onKeyPress( event ) {
     console.log("Key is",event.keyCode);
     switch (event.keyCode) {
         case 48:
-            objmtlLoader(
-                "js/assets/Dino/dino_3",
-                "js/assets/textures/dino_texture.png"
-            );
-
+            // objmtlLoader(
+            //     "js/assets/Dino/dino_3",
+            //     "js/assets/textures/dino_texture.png"
+            // );
+            jsonLoader("js/assets/Jumpy/jumpy-Beauty.js", "js/assets/textures/dino_texture.png");
             break;
         case 49:
             camera.position.set(camera.position.x, camera.position.y, camera.position.z-0.3);
