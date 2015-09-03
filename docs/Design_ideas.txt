@@ -1,3 +1,7 @@
+Plants represented as pointcloud
+
+
+
 Use a system based on Time, having a Time-Until-Penalty period.
     Use the THREE.Clock() object that checks the current machine time.
 
@@ -78,4 +82,17 @@ Critter {
     Location:-Object3D-ID
 }
 
+
+
+
+
+Similualtion history needs to include EVENTS, such as when the user declares events  << I forgot about that!
+
+
+
+Tasks:
+    + Have N critters walking along 3 walls.
+        - Will all be vertical
+        - Pick a random point on the wall, "walk" to that point.
+            = Repeat this process
 

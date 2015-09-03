@@ -12,7 +12,11 @@ function initScene() {
 
 function initRenderer() {
     console.log("initRenderer()");
-    renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer = new THREE.WebGLRenderer({
+        antialias: true,
+        preserveDrawingBuffer: true   // required to support .toDataURL()
+    });
+
     {
         renderer.setPixelRatio(window.devicePixelRatio);
         renderer.setSize(window.innerWidth, window.innerHeight);
@@ -20,6 +24,15 @@ function initRenderer() {
         renderer.gammaInput = true;
         renderer.gammaOutput = true;
     }
+    // THREEx.Screenshot.bindKey(renderer);
+    // THREEx.Screenshot.bindKey(renderer, {charCode: });
+    //         opts        = opts      || {};
+    //     var charCode    = opts.charCode || 'p'.charCodeAt(0);
+    //     var width   = opts.width;
+    //     var height  = opts.height;
+    //     var callback    = opts.callback || function(url){
+    //         window.open(url, "name-"+Math.random());
+    //     };
 
 }
 

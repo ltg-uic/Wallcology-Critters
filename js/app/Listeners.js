@@ -54,6 +54,10 @@ function onKeyPress( event ) {
             // updateLightPosition();
             console.log(camera.position);
             break;
+        case 112:
+            dataUrl = renderer.domElement.toDataURL("image/png");
+            console.log(dataUrl);
+            break;
 
     }
 

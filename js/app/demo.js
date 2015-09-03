@@ -40,9 +40,9 @@ function onCreate() {
     // objmtlLoader( "js/assets/Dino/dino_3", "js/assets/textures/dino_texture.png" );
 
     jsonLoader("js/assets/Jumpy/jumpy-Beauty.js", "js/assets/textures/dino_texture.png"); //
-    jsonMorphLoader("js/assets/3rd/elk_life.js");
+    jsonLoader("js/assets/Jumpy/jumpy_TEST1.js", "js/assets/textures/dino_texture.png"); //
+
     // jsonMorphLoader("js/assets/3rd/cow.js");
-    jsonMorphLoader('js/assets/3rd/fish_life.js');
     // initJSONCritter();
 }
 
@@ -55,14 +55,14 @@ function onFrame() {
 function render() {
     controls.update();
 
+    // var time = Date.now();
     THREE.AnimationHandler.update( Clock.getDelta() );
-
+    // prevTime = time;
+//
     // for (var i = 0; i < morphAnimations.length; i++) {
-        var time = Date.now();
-        // console.log(i, morphAnimations[i]);
-        morphAnimations[0].update( time - prevTime );
-        morphAnimations[1].update( time - prevTime );
-        prevTime = time;
+    //     console.log(i, morphAnimations[i]);
+    //     morphAnimations[0].update( time - prevTime );
+        // morphAnimations[1].update( time - prevTime );
     // };
     // CritterGroups.children.forEach(function(mesh){
 
