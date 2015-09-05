@@ -24,42 +24,31 @@ function onKeyPress( event ) {
     console.log("Key is",event.keyCode);
     switch (event.keyCode) {
         case 48:
-            // objmtlLoader(
-            //     "js/assets/Dino/dino_3",
-            //     "js/assets/textures/dino_texture.png"
-            // );
-            jsonLoader("js/assets/Jumpy/jumpy-Beauty.js", "js/assets/textures/dino_texture.png");
-            break;
-        case 49:
-            camera.position.set(camera.position.x, camera.position.y, camera.position.z-0.3);
-            // controls.update();
-            // updateLightPosition();
-            console.log(camera.position)
-            break;
-        case 50:
-            camera.position.set(camera.position.x, camera.position.y, camera.position.z+0.3);
-            // controls.update();
-            // updateLightPosition();
-            console.log(camera.position);
-            break;
-        case 51:
-            camera.position.set(camera.position.x, camera.position.y+0.3, camera.position.z);
-            // controls.update();
-            // updateLightPosition();
-            console.log(camera.position);
-            break;
-        case 52:
-            camera.position.set(camera.position.x, camera.position.y-0.3, camera.position.z);
-            // controls.update();
-            // updateLightPosition();
-            console.log(camera.position);
-            break;
-        case 112:
-            dataUrl = renderer.domElement.toDataURL("image/png");
-            console.log(dataUrl);
-            break;
+            jsonLoader(
+                "jumpy",
+                "js/assets/Jumpy/jumpy_TEST1.js",
+                [   "js/assets/textures/grungy-twirl.jpg",
+                    "js/assets/textures/grungy-twirl.jpg",
+                    "js/assets/textures/grungy-twirl.jpg",
+                    "js/assets/textures/grungy-twirl.jpg",
+                    "js/assets/textures/orange-twirl.jpg"
+                ]
+            );
 
+            break;
+        case 57:
+            jsonLoader(
+                "chewie",
+                "js/assets/chewie/chewie_0.js",
+                [   "js/assets/textures/Dino_TallyShapeBump.png",
+                    "js/assets/textures/orange-twirl.jpg"
+                ]
+            ); //
+
+            break;
+        case 56:
+            objmtlLoader("js/assets/Dino/dino", "js/assets/textures/disturb.jpg")
+            break;
     }
 
 }
-

@@ -7,7 +7,6 @@ function initScene() {
     }
 
     scene.add(CritterGroups);
-
 }
 
 function initRenderer() {
@@ -24,16 +23,6 @@ function initRenderer() {
         renderer.gammaInput = true;
         renderer.gammaOutput = true;
     }
-    // THREEx.Screenshot.bindKey(renderer);
-    // THREEx.Screenshot.bindKey(renderer, {charCode: });
-    //         opts        = opts      || {};
-    //     var charCode    = opts.charCode || 'p'.charCodeAt(0);
-    //     var width   = opts.width;
-    //     var height  = opts.height;
-    //     var callback    = opts.callback || function(url){
-    //         window.open(url, "name-"+Math.random());
-    //     };
-
 }
 
 
@@ -42,6 +31,26 @@ function initContainer() {
 
     container = document.getElementById('Wallcology');
     container.appendChild(renderer.domElement);
+
+    stats = new Stats();
+    stats.setMode( 0 ); // 0: fps, 1: ms, 2: mb
+
+    // align top-left
+    stats.domElement.style.position = 'absolute';
+    stats.domElement.style.left = '0px';
+    stats.domElement.style.top = '0px';
+
+    container.appendChild( stats.domElement );
+}
+
+
+function initListeners() {
+    console.log("initListeners()")
+    window.addEventListener('resize', onReshape, false);
+    window.addEventListener('mousemove', onMouseMove, false);
+    // window.addEventListener('click', onMouseClick, true);
+    // window.addEventListener('dblclick', onMouseDoubleClick, true);
+    window.addEventListener('keypress', onKeyPress, false);
 }
 
 
@@ -55,7 +64,7 @@ function initCamera() {
         // console.log("\t", pos)
             // var pos = pointCloud.position;
         // light.position.set(pos.x, pos.y + 0.1, pos.z - (pos.z * 0.5));
-        camera.position.set(0, -4, 5);
+        camera.position.set(-0, -30, -40);
         controls = new THREE.TrackballControls(camera, renderer.domElement); {
             controls.rotateSpeed = 4.0;
             controls.zoomSpeed = 1.5;
@@ -70,8 +79,8 @@ function initCamera() {
             controls.keys = [65, 83, 68];
             controls.enabled = true;
         }
-        camera.lookAt(CritterGroups.position);
-        controls.target.set(0, -5, -5);
+        camera.lookAt(new THREE.Vector3(0, -50, 0));
+        controls.target.set(0, -50, 0);
         controls.update();
         // updateLightPosition();
     }
@@ -102,7 +111,7 @@ function initEnvMap() {
 
     // Skybox
 
-    cubeMesh = new THREE.Mesh( new THREE.BoxGeometry( 10, 10, 10 ), cubeMaterial );
+    cubeMesh = new THREE.Mesh( new THREE.BoxGeometry( 100, 100, 100 ), cubeMaterial );
     scene.add( cubeMesh );
 }
 
@@ -130,57 +139,64 @@ function initTextureLoader() {
     }
 }
 
-function initJSONLoader(isMorph) {
+function initAnimations() {
+    for (var i = 0; i < animations.length; i++) {
+        animations[i].offset = 0.05 * Math.random();
+        animations[i].play()
+    };
+}
+
+
+function initJSONLoader() {
     var loader = new THREE.JSONLoader();    //OBJMTLLoader();
-    var animation;
-    // 'js/assets/3rd/elk_life.js'
-    console.log("isMorph?", isMorph);
-    if (!isMorph)
-        return function( name, URL, textURL ) {
-            loader.load(URL, function (geometry, materials) {
-                console.log("Animation Critter", name, URL, geometry, materials);
-                materials.forEach(function(mat){
-                    console.log(name, mat);
-                    // mat.color.setRGB(0,0,1.0);
-                    shading: THREE.SmoothShading,
-                    // mat.specular.setRGB(Math.random(),Math.random(),Math.random())
-                    mat.map = THREE.ImageUtils.loadTexture(textURL)
-                    mat.skinning = true;
-                    // vertexColors: THREE.VertexColors,
-                    // mat.emissive.setRGB(Math.random(),Math.random(),Math.random())
-                })
-                mesh = new THREE.SkinnedMesh( geometry, new THREE.MeshFaceMaterial(materials) );
-                mesh.name = name;
-                mesh.scale.set( 0.5, 0.5, 0.5 );
-                mesh.position.set(
-                    getRandPos(-5,6),
-                    -5,
-                    getRandPos(-2,3)
-                );
-                CritterGroups.add( mesh );
-                console.log(mesh)
-                var animation = new THREE.Animation( mesh, mesh.geometry.animations[ 0 ], THREE.AnimationHandler.CATMULLROM);
-                console.log(animation)
-                animation.play();
-            });
-        }
-    else
-        return function( URL, textURL) {
-            loader.load(URL, function( geometry ) {
-                console.log("Morph Critter", URL, geometry);
-                mesh = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: 0x606060, morphTargets: true } ) );
-                mesh.scale.set( 0.01, 0.01, 0.01 );
-                mesh.position.set(
-                    getRandPos(-5,6),
-                    -5,
-                    getRandPos(-2,3)
-                );
-                CritterGroups.add( mesh );
-                morphAnimations.push(new THREE.MorphAnimation( mesh ));
-                morphAnimations[morphAnimations.length -1].play();
-                // anime.play();
-            });
-        };
+    var count = 0;
+
+    var x, y,
+        animation,
+        gridx = 10, gridz = 10,
+        sepx = 2, sepz = 3;
+
+    return function( name, URL, textURL ) {
+        loader.load(URL, function (geometry, materials) {
+            console.log("SkinnedCritter", name, URL, materials.length, geometry.animations.length);
+            for (var i = 0; i < materials.length; i++) {
+                console.log(name, i, textURL[i])
+                materials[i] = new THREE.MeshBasicMaterial({
+                    map: THREE.ImageUtils.loadTexture(textURL[i]), // "js/assets/textures/dino_texture.png"
+                    // specular: 'rgb(255, 255, 255)',
+                    opacity: 1,
+                    skinning: true,
+                    transparent: true
+                    // morphTargets: true,
+                    // needsUpdate: true
+                });
+            };
+
+            var material = new THREE.MeshFaceMaterial(materials);
+
+            for (var x = 0; x < gridx; x++) {
+                for (var z = 0; z < gridz; z++) {
+                    mesh = new THREE.SkinnedMesh( geometry, material, false );
+                    mesh.position.x = -( gridx - 1 ) * sepx * 0.5 + x * sepx + Math.random() * 0.5 * sepx;
+                    mesh.position.z = - ( gridz - 1 ) * sepz * 0.5 + z * sepz + Math.random() * 0.5 * sepz;
+                    // console.log(mesh.position.x, mesh.position.z);
+                    if (name === "chewie") mesh.rotation.x += 1.3
+                    mesh.position.y = -50;
+                    mesh.name = name + x.toString() + z.toString();
+                    mesh.scale.set( 0.5, 0.5, 0.5 );
+
+                    CritterGroups.add( mesh );
+                    animation = new THREE.Animation( mesh, mesh.geometry.animations[ 0 ]);
+                    animation.play()
+                    console.log("bug count is", CritterGroups.children.length);
+                };
+            };
+
+
+
+        });
+
+    }
 }
 
 
@@ -207,7 +223,7 @@ function initOBJMTLLoader() {
                         // specular: colorKey(halo.time),
                         // shininess: 40,
                         // shading: THREE.SmoothShading,
-                        // vertexColors: THREE.VertexColors,
+                        vertexColors: THREE.VertexColors,
                         // transparent: true,
                         // side: THREE.BackSide,  // Seems to be slowing things down a lot
                         opacity: 0.1
@@ -236,12 +252,3 @@ function initOBJMTLLoader() {
 }
 
 
-
-function initListeners() {
-    console.log("initListeners()")
-    window.addEventListener('resize', onReshape, false);
-    window.addEventListener('mousemove', onMouseMove, false);
-    // window.addEventListener('click', onMouseClick, true);
-    // window.addEventListener('dblclick', onMouseDoubleClick, true);
-    window.addEventListener('keypress', onKeyPress, false);
-}
