@@ -4,18 +4,36 @@
         <style>
             body { margin: 0; }
             canvas { width: 100%; height: 100% }
+            #info {
+                text-align: center;
+                padding: 10px;
+                z-index: 10;
+                width: 100%;
+                position: absolute;
+                color: red
+            }
+            strong {
+                background: black
+            }
         </style>
     </head>
     <body>
+        <div id="info">
+            <p>
+                <strong>Critter Count is: </strong>
+            </p>
+        </div>
         <div id="Wallcology"></div>
 
         <script type="text/javascript" src="js/lib/three.js"></script>
+        <script type="text/javascript" src="js/lib/jquery.js"></script>
         <script type="text/javascript" src="js/lib/OBJLoader.js"></script>
         <script type="text/javascript" src="js/lib/THREEx.screenshot.js"></script>
         <script type="text/javascript" src="js/lib/loaders/DDSLoader.js"></script>
         <script type="text/javascript" src="js/lib/loaders/MTLLoader.js"></script>
         <script type="text/javascript" src="js/lib/loaders/OBJMTLLoader.js"></script>
         <script type="text/javascript" src="js/lib/TrackballControls.js"></script>
+        <script type="text/javascript" src="js/lib/CurveExtras.js"></script>
         <script type="text/javascript" src="js/lib/stats.min.js"></script>
 
         <script type="text/javascript" src="js/app/Useful.js"></script>

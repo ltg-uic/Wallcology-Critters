@@ -64,7 +64,7 @@ function initCamera() {
         // console.log("\t", pos)
             // var pos = pointCloud.position;
         // light.position.set(pos.x, pos.y + 0.1, pos.z - (pos.z * 0.5));
-        camera.position.set(-0, -30, -40);
+        camera.position.set(-0, 20, -10);
         controls = new THREE.TrackballControls(camera, renderer.domElement); {
             controls.rotateSpeed = 4.0;
             controls.zoomSpeed = 1.5;
@@ -80,7 +80,7 @@ function initCamera() {
             controls.enabled = true;
         }
         camera.lookAt(new THREE.Vector3(0, -50, 0));
-        controls.target.set(0, -50, 0);
+        controls.target.set(0, 0, 0);
         controls.update();
         // updateLightPosition();
     }
@@ -139,11 +139,36 @@ function initTextureLoader() {
     }
 }
 
-function initAnimations() {
-    for (var i = 0; i < animations.length; i++) {
-        animations[i].offset = 0.05 * Math.random();
-        animations[i].play()
-    };
+function initTube() {
+    var extrudePath = new THREE.Curves.VivianiCurve(70)
+
+    tube = new THREE.TubeGeometry(extrudePath, segments, 2, radiusSegments, closed);
+
+    tubeMesh = THREE.SceneUtils.createMultiMaterialObject( tube,
+            [
+                new THREE.MeshBasicMaterial({
+                    map: THREE.ImageUtils.loadTexture("js/assets/textures/disturb.jpg"),
+                    opacity: 1,
+                    transparent: false
+                }),
+                new THREE.MeshBasicMaterial({
+                    color: 0xffffff,
+                    opacity: 0.3,
+                    wireframe: true,
+                    transparent: true
+                })
+            ]
+        );
+
+    tubeMesh.scale.set(scale, scale, scale);
+    // tubeMesh.position.set(0, -40, 0);
+    tubeMesh.name = "pathCurve";
+    camera.lookAt(tubeMesh.position);
+    // controls.target.set(tubeMesh.position);
+    scene.add(tubeMesh)
+
+
+
 }
 
 
@@ -153,8 +178,8 @@ function initJSONLoader() {
 
     var x, y,
         animation,
-        gridx = 10, gridz = 10,
-        sepx = 2, sepz = 3;
+        gridx = 5, gridz = 5,
+        sepx = 10, sepz = 10;
 
     return function( name, URL, textURL ) {
         loader.load(URL, function (geometry, materials) {
@@ -174,23 +199,20 @@ function initJSONLoader() {
 
             var material = new THREE.MeshFaceMaterial(materials);
 
-            for (var x = 0; x < gridx; x++) {
-                for (var z = 0; z < gridz; z++) {
-                    mesh = new THREE.SkinnedMesh( geometry, material, false );
-                    mesh.position.x = -( gridx - 1 ) * sepx * 0.5 + x * sepx + Math.random() * 0.5 * sepx;
-                    mesh.position.z = - ( gridz - 1 ) * sepz * 0.5 + z * sepz + Math.random() * 0.5 * sepz;
-                    // console.log(mesh.position.x, mesh.position.z);
-                    if (name === "chewie") mesh.rotation.x += 1.3
-                    mesh.position.y = -50;
-                    mesh.name = name + x.toString() + z.toString();
-                    mesh.scale.set( 0.5, 0.5, 0.5 );
+            mesh = new THREE.SkinnedMesh( geometry, material, false );
+            // mesh.position.x = -( gridx - 1 ) * sepx * 0.5 + x * sepx + Math.random() * 0.5 * sepx;
+            // mesh.position.z = - ( gridz - 1 ) * sepz * 0.5 + z * sepz + Math.random() * 0.5 * sepz;
+            // // console.log(mesh.position.x, mesh.position.z);
+            if (name === "chewie") mesh.rotation.x += 1
+            // mesh.position.y = -50;
+            mesh.name = name + CritterGroups.children.length.toString();
+            mesh.scale.set( 0.5, 0.5, 0.5 );
 
-                    CritterGroups.add( mesh );
-                    animation = new THREE.Animation( mesh, mesh.geometry.animations[ 0 ]);
-                    animation.play()
-                    console.log("bug count is", CritterGroups.children.length);
-                };
-            };
+            CritterGroups.add( mesh );
+            animation = new THREE.Animation( mesh, mesh.geometry.animations[ 0 ]);
+            animation.play()
+            $('strong')[0].textContent = "Critter Count is: " + CritterGroups.children.length.toString()
+
 
 
 
@@ -198,7 +220,6 @@ function initJSONLoader() {
 
     }
 }
-
 
 function initOBJMTLLoader() {
 
@@ -237,6 +258,7 @@ function initOBJMTLLoader() {
                     getRandPos(-2,3));
                 critter.updateMatrix();
                 CritterGroups.add(critter);
+                $('strong')[0].textContent = "Critter Count is: " + CritterGroups.children.length.toString()
                 // CritterGroups.getObjectByName(bug.name).add(object);
             },
             // Function called when downloads progress

@@ -15,10 +15,20 @@ var textLoader = initTextureLoader(),
 var GroundCritters, RoofCritters,
     WestWallCritters, EastWallCritters, NorthWallCritters
 
+
+// For our path generation stuffs
+var binormal = new THREE.Vector3();
+    normal = new THREE.Vector3();
+
+var tube, tubeMesh,
+    segments = 100,
+    closed = true,
+    radiusSegments = 3,
+    scale = 0.1;
+
 var currentTime,
     duration = 5000;
 
-var animations = [];
 /*=================================================================*/
 /*                   Begin Function Definitions                    */
 
@@ -39,7 +49,8 @@ function onCreate() {
 
     initEnvMap();
 
-    objmtlLoader("js/assets/Dino/dino", "js/assets/textures/dino_texture.png")
+    initTube();
+
     jsonLoader(
         "jumpy",
         "js/assets/Jumpy/jumpy_TEST1.js",
@@ -58,8 +69,6 @@ function onCreate() {
         ]
     ); //
 
-    initAnimations();
-
     // jsonMorphLoader("js/assets/3rd/cow.js");
     // initJSONCritter();
 }
@@ -75,13 +84,53 @@ function onFrame() {
 function render() {
     controls.update();
 
-    var now = Date.now();
-    var deltat = now - currentTime;
-    currentTime = now;
-    var fract = deltat / duration;
-    var angle = Math.PI * 2 * fract;
 
-    CritterGroups.rotation.y += angle
+    // We move on a offset on its binormal
+
+    var now = Date.now();
+    var offset = 0.0;
+    var looptime = 0;
+    CritterGroups.children.forEach(function(mesh, i){
+        if(mesh.name.includes("jumpy")) {
+            offset = 0.1;
+            looptime = (((i+1)*10)) * 500;
+        } else {
+            offset = 0.4;
+            looptime = (((i+1)*5)) * 1000;
+        }
+
+
+
+        var t = ( now % looptime ) / looptime
+        var pos = tube.parameters.path.getPointAt( t );
+            pos.multiplyScalar( scale );
+
+        // interpolation
+        var segments = tube.tangents.length;
+        var pickt = t * segments;
+        var pick = Math.floor( pickt );
+        var pickNext = ( pick + 1 ) % segments;
+
+        binormal.subVectors( tube.binormals[ pickNext ], tube.binormals[ pick ] );
+        binormal.multiplyScalar( pickt - pick ).add( tube.binormals[ pick ] );
+
+
+        var dir = tube.parameters.path.getTangentAt( (i % 2 === 0)? t: -t*0.001 );
+
+
+
+
+        normal.copy( binormal ).cross( dir );
+        pos.add( normal.clone().multiplyScalar( offset ) );
+        // console.log("pos", pos, "norm", normal, "dir", dir, "off", offset);
+        mesh.position.copy( pos );
+        var lookAt = tube.parameters.path.getPointAt( ( t + 30 / tube.parameters.path.getLength() ) % 1 ).multiplyScalar( scale );
+        lookAt.copy( pos ).add( dir );
+        mesh.matrix.lookAt(mesh.position, lookAt, normal);
+        mesh.rotation.setFromRotationMatrix( mesh.matrix, mesh.rotation.order );
+    })
+
+    // CritterGroups.rotation.y += angle
     THREE.AnimationHandler.update( Clock.getDelta() );  //Clock.getDelta()
     // prevTime = time;
 
@@ -90,9 +139,7 @@ function render() {
     //     morphAnimations[0].update( time - prevTime );
         // morphAnimations[1].update( time - prevTime );
     // };
-    CritterGroups.children.forEach(function(mesh){
-        mesh.rotation.y += angle;
-    })
+
     renderer.render(scene, camera);
 };
 
