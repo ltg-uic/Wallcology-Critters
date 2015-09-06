@@ -9,7 +9,6 @@ var morphAnimations = [];
 var CritterGroups;
 
 var textLoader = initTextureLoader(),
-    objmtlLoader = initOBJMTLLoader(),
     jsonLoader = initJSONLoader();
 
 var GroundCritters, RoofCritters,
@@ -92,10 +91,10 @@ function render() {
     var looptime = 0;
     CritterGroups.children.forEach(function(mesh, i){
         if(mesh.name.includes("jumpy")) {
-            offset = 0.1;
+            offset = 0.1 + scale;
             looptime = (((i+1)*10)) * 500;
         } else {
-            offset = 0.4;
+            offset = 0.4 + scale;
             looptime = (((i+1)*5)) * 1000;
         }
 
@@ -114,11 +113,7 @@ function render() {
         binormal.subVectors( tube.binormals[ pickNext ], tube.binormals[ pick ] );
         binormal.multiplyScalar( pickt - pick ).add( tube.binormals[ pick ] );
 
-
-        var dir = tube.parameters.path.getTangentAt( (i % 2 === 0)? t: -t*0.001 );
-
-
-
+        var dir = tube.parameters.path.getTangentAt( (i % 2 === 0)? t: -t*Math.random() );
 
         normal.copy( binormal ).cross( dir );
         pos.add( normal.clone().multiplyScalar( offset ) );
