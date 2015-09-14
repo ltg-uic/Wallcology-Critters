@@ -28,5 +28,13 @@ Kd 0.00 0.00 0.00
 Ka 0.00 0.00 0.00
 Tf 1.00 1.00 1.00
 map_Kd grunge_wall_1.jpg
-bump grunge_wall_1.jpg -bm -0.555556
+bump grunge_wall_2.jpg -bm -0.156
+Ni 1.00
+newmtl lambert2SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd grunge_wall_1.jpg
+bump grunge_wall_1.jpg -bm -0.05
 Ni 1.00
